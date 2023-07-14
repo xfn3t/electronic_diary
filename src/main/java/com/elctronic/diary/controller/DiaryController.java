@@ -1,7 +1,9 @@
 package com.elctronic.diary.controller;
 
+import com.elctronic.diary.Students;
 import com.elctronic.diary.exception.NotFoundException;
-import org.springframework.stereotype.Controller;
+import com.elctronic.diary.repo.StudentsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,17 @@ import java.util.Map;
 @RequestMapping("/")
 public class DiaryController {
 
+    @Autowired
+    private StudentsRepository studentRepo;
+
+    @GetMapping
+    public List<Students> listAll(Model model) {
+        List<Students> listStudents = studentRepo.findAll();
+        model.addAttribute("listStudents", listStudents);
+
+        return listStudents;
+    }
+
     private int counter = 4;
     private List<Map<String, String>> messages = new ArrayList<Map<String, String>>() {{
         add(new HashMap<String, String>() {{ put("id", "1"); put("text", "First message"); }});
@@ -21,10 +34,7 @@ public class DiaryController {
         add(new HashMap<String, String>() {{ put("id", "3"); put("text", "Three message"); }});
     }};
 
-    @GetMapping
-    public List<Map<String, String>> list() {
-        return messages;
-    }
+
 
     private Map<String, String> getMessage(String id) {
         return messages.stream()
@@ -65,4 +75,6 @@ public class DiaryController {
 
         messages.remove(message);
     }
+
+
 }
