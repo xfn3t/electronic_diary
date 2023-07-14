@@ -1,2 +1,2 @@
-# electronic_diary
-Pet project
+# Electronic diary
+This is a pet project for personal use.
