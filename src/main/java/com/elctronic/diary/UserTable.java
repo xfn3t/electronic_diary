@@ -5,12 +5,18 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "electronic_diary")
-public class Students {
+public class UserTable {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "item")
     private String item;
+
+    @Column(name = "grade")
     private int grade;
+
     public Long getId() {
         return id;
     }
