@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 public class UserTable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "item")

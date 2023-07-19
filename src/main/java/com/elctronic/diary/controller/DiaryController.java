@@ -12,13 +12,13 @@ import java.util.List;
 @RequestMapping("/")
 public class DiaryController {
 
-    private Long counter = 0L;
     @Autowired
     private UserTableRepository studentRepo;
 
 
     @GetMapping
     public List<UserTable> listAll(Model model) {
+        
         List<UserTable> listStudents = studentRepo.findAll();
         model.addAttribute("listStudents", listStudents);
 
@@ -48,7 +48,16 @@ public class DiaryController {
 
     @PostMapping
     public UserTable create(@RequestBody UserTable message) {
-        message.setId(counter++);
+
+        List<UserTable> listStudents = studentRepo.findAll();
+
+        if ( listStudents.size() > 0 ) {
+            if ( listStudents.get( listStudents.size()-1).getId() > 0 )
+                message.setId( listStudents.get(listStudents.size()-1).getId() + 1 );
+        } else {
+            message.setId(1L);
+        }
+
         return studentRepo.save(message);
     }
 
