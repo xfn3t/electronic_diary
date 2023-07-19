@@ -11,10 +11,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/")
 public class DiaryController {
-
+    // xfn3t
     @Autowired
     private UserTableRepository studentRepo;
-
 
     @GetMapping
     public List<UserTable> listAll(Model model) {
