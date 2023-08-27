@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user")
@@ -31,21 +30,16 @@ public class UserDataController {
         return userData.get(i);
     }
 
+    @GetMapping
+    public List<UserData> getAll() {
+        return user.findAll();
+    }
 
     @GetMapping("data/{id}")
     public UserData getUserData(@PathVariable String id) {
         return getUser(id);
     }
 
-    @PostMapping
-    public UserData addUser(@RequestBody UserData users) {
-
-        List<UserData> userData = user.findAll();
-
-        users.setId(UUID.randomUUID().toString());
-
-        return user.save(users);
-    }
 
     @DeleteMapping("{id}")
     public void delUser(@PathVariable String id) {

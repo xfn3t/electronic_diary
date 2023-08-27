@@ -4,7 +4,6 @@ import com.elctronic.diary.UserTable;
 import com.elctronic.diary.repo.UserTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -25,15 +24,17 @@ public class DiaryController {
         return AllTable;
     }
     */
+
+    /*
     @RequestMapping(path = {"/",""}, method = {RequestMethod.GET})
 
     public ModelAndView welcome() {
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("page.html");
+        modelAndView.setViewName("login.html");
         return modelAndView;
     }
-
+    */
     private UserTable getMessage(Long id) {
 
         int i = 0;

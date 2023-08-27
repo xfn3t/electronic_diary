@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+</head>
+<body>
+    <center>
+        <h1>Wellcum!</h1>
+        <a th:href="@{/login}">LOGIN PAGE</a>
+    </center>
+
+
+</body>
+<style>
+
+    html, body {
+        height: 100vh;
+    }
+
+    body {
+        background: rgb(29,131,253);
+        background: linear-gradient(36deg, rgba(29,131,253,1) 0%, rgba(169,0,255,1) 100% 100%) no-repeat;
+    }
+
+    a {
+        font-size: 100px;
+        text-decoration: none;
+        color: white;
+    }
+
+    h1 {
+        font-size: 100px;
+        color: white;
+    }
+</style>
+</html>
