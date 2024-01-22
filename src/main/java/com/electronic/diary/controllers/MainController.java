@@ -1,6 +1,7 @@
 package com.electronic.diary.controllers;
 
 import com.electronic.diary.DTO.UserDTO;
+import com.electronic.diary.DTO.UserTableDTO;
 import com.electronic.diary.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j // for logs in console --> variable "log"
@@ -19,14 +21,15 @@ public class MainController {
     @Autowired
     private UserService userService;
 
+
     @GetMapping
-    public List<UserDTO> getAllUsers() {
-        return userService.findAllUsers();
+    public List<Map<Optional<UserDTO>, List<UserTableDTO>>> getAllUsers() {
+        return userService.findAllUsersWithTables();
     }
 
     @GetMapping("/{id}")
-    public Optional<UserDTO> getUserById(@PathVariable Long id) {
-        return userService.findById(id);
+    public Map<Optional<UserDTO>, List<UserTableDTO>> getUserById(@PathVariable Long id) {
+        return userService.findByIdUsersWithTable(id);
     }
 
     @GetMapping("/existEntity")

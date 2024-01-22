@@ -8,9 +8,7 @@ import lombok.Data;
 @Table(name = "user_data")
 public class UserDTO {
 
-
     @Id
-    //@Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -34,7 +32,7 @@ public class UserDTO {
     public String toString() {
         return "{ID: " + id +
                 ", Username: " + username +
-                ", E-mail: " + email + "}\n";
+                ", E-mail: " + email + "}";
     }
 
 }

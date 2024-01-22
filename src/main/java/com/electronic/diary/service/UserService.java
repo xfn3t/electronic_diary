@@ -1,9 +1,10 @@
 package com.electronic.diary.service;
 
 import com.electronic.diary.DTO.UserDTO;
-import com.electronic.diary.repository.UserRepository;
+import com.electronic.diary.DTO.UserTableDTO;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
@@ -13,5 +14,8 @@ public interface UserService {
     void delete(UserDTO user);
     void deleteById(Long id);
     Boolean existEntity(UserDTO user);
+
+    Map<Optional<UserDTO>, List<UserTableDTO>> findByIdUsersWithTable(Long user_id);
+    List<Map<Optional<UserDTO>, List<UserTableDTO>>> findAllUsersWithTables();
 
 }

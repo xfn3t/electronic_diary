@@ -2,13 +2,12 @@ package com.electronic.diary.service;
 
 
 import com.electronic.diary.DTO.UserDTO;
+import com.electronic.diary.DTO.UserTableDTO;
 import com.electronic.diary.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -16,9 +15,36 @@ public class UserServiceImp implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private final UserTableService userTableService = new UserTableServiceImp();
+
     @Override
     public List<UserDTO> findAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<Map<Optional<UserDTO>, List<UserTableDTO>>> findAllUsersWithTables() {
+
+        List<Map<Optional<UserDTO>, List<UserTableDTO>>> list = new ArrayList<>();
+
+        for(UserDTO user: userRepository.findAll()) {
+            Map<Optional<UserDTO>, List<UserTableDTO>> table = new HashMap<>();
+            table.put(userRepository.findById(user.getId()), userTableService.findTableByUserId(user.getId()));
+            list.add(table);
+        }
+        return list;
+    }
+
+    @Override
+    public Map<Optional<UserDTO>, List<UserTableDTO>> findByIdUsersWithTable(Long user_id) {
+
+        System.out.println(userRepository.findById(user_id));
+        if (userRepository.findById(user_id).isEmpty())
+            return new HashMap<>();
+
+        Map<Optional<UserDTO>, List<UserTableDTO>> table = new HashMap<>();
+        table.put(userRepository.findById(user_id), userTableService.findTableByUserId(user_id));
+        return table;
     }
 
     public Optional<UserDTO> findById(Long id) {
@@ -28,7 +54,6 @@ public class UserServiceImp implements UserService {
     @Override
     public void deleteById(Long id) {
         if(findById(id).isEmpty()) return;
-
         userRepository.delete(findById(id).get());
     }
 
@@ -48,6 +73,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public Boolean existEntity(UserDTO user) {
+
         return !findAllUsers()
                 .stream()
                 .filter(
@@ -56,5 +82,7 @@ public class UserServiceImp implements UserService {
                 )
                 .toList()
                 .isEmpty();
+
+
     }
 }
