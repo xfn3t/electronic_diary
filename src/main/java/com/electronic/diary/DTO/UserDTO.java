@@ -9,8 +9,9 @@ import lombok.Data;
 public class UserDTO {
 
     @Id
+    @Column(name = "user_id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long user_id;
 
     @Column(name = "username")
     private String username;
@@ -26,13 +27,16 @@ public class UserDTO {
         this.email = email;
         this.password = password;
     }
+
     public UserDTO() {}
 
     @Override
     public String toString() {
-        return "{ID: " + id +
-                ", Username: " + username +
-                ", E-mail: " + email + "}";
+        return new StringBuilder("{ID: ").append(user_id)
+                .append(", Username: ").append(username)
+                .append(", E-mail: ").append(email)
+                .append("}")
+                .toString();
     }
 
 }

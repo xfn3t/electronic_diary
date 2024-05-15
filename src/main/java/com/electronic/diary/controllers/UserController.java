@@ -1,7 +1,6 @@
 package com.electronic.diary.controllers;
 
 import com.electronic.diary.DTO.UserDTO;
-import com.electronic.diary.DTO.UserTableDTO;
 import com.electronic.diary.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,26 +9,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j // for logs in console --> variable "log"
 @RestController
 @RequestMapping("/api/users")
-public class MainController {
+public class UserController {
 
     @Autowired
     private UserService userService;
 
-
     @GetMapping
-    public List<Map<Optional<UserDTO>, List<UserTableDTO>>> getAllUsers() {
-        return userService.findAllUsersWithTables();
+    public List<UserDTO> getAllUsers() {
+        log.info("Get all users");
+        return userService.findAllUsers();
     }
 
     @GetMapping("/{id}")
-    public Map<Optional<UserDTO>, List<UserTableDTO>> getUserById(@PathVariable Long id) {
-        return userService.findByIdUsersWithTable(id);
+    public Optional<UserDTO> getUserById(@PathVariable Long id) {
+        log.info("Get user by id");
+        return userService.findById(id);
     }
 
     @GetMapping("/existEntity")
@@ -52,8 +51,16 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.OK).body("Success saved \n" + user);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not saved");
+            System.out.println(e.getMessage());
+            log.info("User: " + user);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not saved " + user);
         }
+    }
+
+    @PutMapping("/{id}")
+    public void updateUser(@PathVariable Long id, @RequestBody UserDTO user) {
+        userService.update(id, user);
     }
 
 
@@ -61,6 +68,7 @@ public class MainController {
     public HttpStatus deleteUserById(@PathVariable Long id) {
         if (id == null) return HttpStatus.BAD_REQUEST;
         userService.deleteById(id);
+        //userTableService.deleteTableByUserId(id);
         return HttpStatus.OK;
     }
 
@@ -69,6 +77,7 @@ public class MainController {
         if (user == null) return HttpStatus.BAD_REQUEST;
         if (!userService.existEntity(user)) return HttpStatus.BAD_REQUEST;
 
+        user = userService.findByUsername(user.getUsername()).get();
         userService.delete(user);
         log.info("\n DELETED: " + user);
         return HttpStatus.OK;

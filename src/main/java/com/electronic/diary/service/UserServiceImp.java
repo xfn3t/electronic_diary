@@ -1,9 +1,14 @@
 package com.electronic.diary.service;
 
 
+import com.electronic.diary.DTO.ItemsDTO;
 import com.electronic.diary.DTO.UserDTO;
-import com.electronic.diary.DTO.UserTableDTO;
 import com.electronic.diary.repository.UserRepository;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,38 +20,13 @@ public class UserServiceImp implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private final UserTableService userTableService = new UserTableServiceImp();
-
     @Override
     public List<UserDTO> findAllUsers() {
         return userRepository.findAll();
     }
 
-    @Override
-    public List<Map<Optional<UserDTO>, List<UserTableDTO>>> findAllUsersWithTables() {
-
-        List<Map<Optional<UserDTO>, List<UserTableDTO>>> list = new ArrayList<>();
-
-        for(UserDTO user: userRepository.findAll()) {
-            Map<Optional<UserDTO>, List<UserTableDTO>> table = new HashMap<>();
-            table.put(userRepository.findById(user.getId()), userTableService.findTableByUserId(user.getId()));
-            list.add(table);
-        }
-        return list;
-    }
 
     @Override
-    public Map<Optional<UserDTO>, List<UserTableDTO>> findByIdUsersWithTable(Long user_id) {
-
-        System.out.println(userRepository.findById(user_id));
-        if (userRepository.findById(user_id).isEmpty())
-            return new HashMap<>();
-
-        Map<Optional<UserDTO>, List<UserTableDTO>> table = new HashMap<>();
-        table.put(userRepository.findById(user_id), userTableService.findTableByUserId(user_id));
-        return table;
-    }
-
     public Optional<UserDTO> findById(Long id) {
         return userRepository.findById(id);
     }
@@ -67,6 +47,31 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public void update(Long id, UserDTO newUser) {
+
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+
+        Transaction transaction = session.beginTransaction();
+
+        UserDTO user = session.get(UserDTO.class, id);
+
+        if (user != null) {
+
+            user.setUsername(newUser.getUsername());
+            user.setEmail(newUser.getEmail());
+
+            session.update(user);
+
+            transaction.commit();
+        } else {
+            System.out.println("User with id: " + id + " not found.");
+        }
+
+        session.close();
+    }
+
+    @Override
     public void delete(UserDTO user) {
         userRepository.delete(user);
     }
@@ -74,15 +79,21 @@ public class UserServiceImp implements UserService {
     @Override
     public Boolean existEntity(UserDTO user) {
 
-        return !findAllUsers()
+        return findAllUsers()
+                .stream()
+                .anyMatch(
+                    x -> x.getUsername().equals(user.getUsername()) ||
+                         x.getEmail().equals(user.getEmail())
+                );
+    }
+
+    @Override
+    public Optional<UserDTO> findByUsername(String username) {
+        return findAllUsers()
                 .stream()
                 .filter(
-                    x -> x.getUsername().equals(user.getUsername()) &&
-                         x.getEmail().equals(user.getEmail())
+                        x -> x.getUsername().equals(username)
                 )
-                .toList()
-                .isEmpty();
-
-
+                .findFirst();
     }
 }
