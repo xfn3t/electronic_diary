@@ -1,5 +1,6 @@
 package com.electronic.diary.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class ItemsDTO {
     @Column(name = "item_content")
     private String item_content;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserDTO user;
@@ -34,10 +36,11 @@ public class ItemsDTO {
 
     @Override
     public String toString() {
-        return new StringBuilder("{Item_ID: ").append(items_id)
-                .append(", Item_name: ").append(item_name)
-                .append(", Item_content: ").append(item_content)
-                .append(", User_ID: ").append(user.getUser_id())
+        return new StringBuilder("{\n")
+                .append("\t\"Item_ID\": ").append(items_id).append(", \n")
+                .append("\t\"Item_name\": \"").append(item_name).append(items_id).append("\", \n")
+                .append("\t\"Item_content\": \"").append(item_content).append(items_id).append("\", \n")
+                .append("\t\"User_ID\": ").append(user.getUser_id()).append("\n")
                 .append("}")
                 .toString();
     }

@@ -2,7 +2,7 @@ package com.electronic.diary.controllers;
 
 import com.electronic.diary.DTO.ItemsDTO;
 import com.electronic.diary.DTO.UserDTO;
-import com.electronic.diary.service.ItemsService;
+import com.electronic.diary.repository.ItemsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,18 +11,17 @@ import java.util.List;
 
 @Slf4j // for logs in console --> variable "log"
 @RestController
-@RequestMapping("/api/{id}/table")
+@RequestMapping("/api/users/{id}/table")
 public class UserTablesController {
 
     @Autowired
-    private ItemsService itemsService;
-
+    private ItemsRepository itemsRepository;
 
     @GetMapping
-    public List<ItemsDTO> getAllItems(@PathVariable Long id) {
-        return itemsService.findAll();
+    public List<ItemsDTO> findAllByUserId(@PathVariable Long id) {
+        log.info("Get all user tables");
+        return itemsRepository.findItemsByUserId(id);
     }
-
 
     @PostMapping
     public void addItem(@RequestBody List<ItemsDTO> items, @PathVariable Long id) {
@@ -32,22 +31,17 @@ public class UserTablesController {
                 UserDTO u = new UserDTO();
                 u.setUser_id(id);
                 item.setUser(u);
-                itemsService.save(item);
+                itemsRepository.save(item);
             }
     }
 
     @PutMapping("/item")
     public void updateItem(@PathVariable Long id, @RequestBody ItemsDTO item) {
-        itemsService.update(id, item);
-    }
-
-    @DeleteMapping
-    public void deleteAllItems(@PathVariable Long id) {
-        itemsService.deleteTableByUserId(id);
+        itemsRepository.update(id, item);
     }
 
     @DeleteMapping("/item")
     public void deleteItem(@PathVariable Long id) {
-        itemsService.deleteItem(id);
+        itemsRepository.deleteById(id);
     }
 }
