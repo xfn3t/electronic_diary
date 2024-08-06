@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="create/create-user.xml" relativeToChangelogFile="true"/>
+    <include file="create/create-task-list.xml" relativeToChangelogFile="true"/>
+    <include file="create/create-tasks.xml" relativeToChangelogFile="true"/>
+    <include file="create/create-tags.xml" relativeToChangelogFile="true"/>
+    <include file="create/create-task-tags.xml" relativeToChangelogFile="true"/>
+    <include file="create/create-comments.xml" relativeToChangelogFile="true"/>
+    <include file="create/create-attachments.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

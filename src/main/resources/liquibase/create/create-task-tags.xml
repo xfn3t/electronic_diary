@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="createTaskTags" author="xfnet">
+        <createTable tableName="task_tags">
+            <column name="task_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="task_id, tag_id" tableName="task_tags" constraintName="task_tags_pkey"/>
+        <addUniqueConstraint columnNames="task_id, tag_id" tableName="task_tags" constraintName="task_tag_unique"/>
+        <addForeignKeyConstraint baseColumnNames="task_id" baseTableName="task_tags" constraintName="task_tags_task_id_fkey" referencedTableName="tasks" referencedColumnNames="task_id" onUpdate="CASCADE" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="task_tags" constraintName="task_tags_tag_id_fkey" referencedTableName="tags" referencedColumnNames="tag_id" onUpdate="CASCADE" onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

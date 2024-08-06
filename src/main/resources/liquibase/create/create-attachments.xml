@@ -1,0 +1,29 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="createAttachments" author="xfnet">
+        <createTable tableName="attachments">
+            <column name="attachment_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="task_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="filename" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_path" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uploaded_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="task_id" baseTableName="attachments" constraintName="attachments_task_id_fkey" referencedTableName="tasks" referencedColumnNames="task_id" onUpdate="CASCADE" onDelete="CASCADE"/>
+        <addCheckConstraint tableName="attachments" constraintName="check_uploaded_at" checkCondition="uploaded_at &lt;= CURRENT_TIMESTAMP"/>
+    </changeSet>
+
+</databaseChangeLog>

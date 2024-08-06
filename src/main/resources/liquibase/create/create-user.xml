@@ -1,0 +1,32 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="createUser" author="xfnet">
+        <createTable tableName="users">
+            <column name="user_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="text">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="varchar(320)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="email" tableName="users" constraintName="email_unique"/>
+        <addUniqueConstraint columnNames="username" tableName="users" constraintName="username_unique"/>
+        <addCheckConstraint tableName="users" constraintName="check_username_length" checkCondition="length(username) &gt; 5"/>
+        <addCheckConstraint tableName="users" constraintName="check_email_length" checkCondition="length(email) &gt; 3"/>
+        <addCheckConstraint tableName="users" constraintName="check_created_at" checkCondition="created_at &lt;= CURRENT_TIMESTAMP"/>
+    </changeSet>
+
+</databaseChangeLog>

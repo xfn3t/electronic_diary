@@ -1,0 +1,42 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="createTask" author="xfnet">
+        <createTable tableName="tasks">
+            <column name="task_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="list_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="due_date" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="priority" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="list_id" baseTableName="tasks" constraintName="tasks_list_id_fkey" referencedTableName="task_lists" referencedColumnNames="list_id" onUpdate="CASCADE" onDelete="CASCADE"/>
+        <addCheckConstraint tableName="tasks" constraintName="check_created_at" checkCondition="created_at &lt;= CURRENT_TIMESTAMP"/>
+        <addCheckConstraint tableName="tasks" constraintName="check_updated_at" checkCondition="updated_at &lt;= CURRENT_TIMESTAMP"/>
+    </changeSet>
+
+</databaseChangeLog>

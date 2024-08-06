@@ -1,26 +1,26 @@
 package com.electronic.diary.repository;
 
-import com.electronic.diary.DTO.UserDTO;
-import org.apache.catalina.User;
+import com.electronic.diary.DTO.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface UserRepository extends JpaRepository<UserDTO, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsById(Long id);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 
-    @Query(value = "SELECT u FROM UserDTO u WHERE username = ?1")
-    UserDTO findByUsername(String username);
+    //@Query(value = "SELECT u FROM User u WHERE username = ?1")
+    Optional<User> findByUsername(String username);
 
-    default void updateById(Long id, UserDTO newUser) {
+    default void updateById(Long id, User newUser) {
 
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
@@ -28,7 +28,7 @@ public interface UserRepository extends JpaRepository<UserDTO, Long> {
         Transaction transaction = session.beginTransaction();
 
         System.out.println("ID FROM UPDATE: " + id);
-        UserDTO user = session.get(UserDTO.class, id);
+        User user = session.get(User.class, id);
 
         if (user != null) {
 

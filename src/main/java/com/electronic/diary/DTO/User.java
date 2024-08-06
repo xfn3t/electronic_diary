@@ -1,9 +1,7 @@
 package com.electronic.diary.DTO;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,12 +10,12 @@ import java.util.List;
 @Table(name = "user_data")
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class User {
 
     @Id
     @Column(name = "user_id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
+    private Long userId;
 
     @Column(name = "username")
     private String username;
@@ -29,29 +27,19 @@ public class UserDTO {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemsDTO> items;
+    private List<Item> items;
 
-    public UserDTO(String username, String email, String password) {
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public UserDTO(String username, String email, String password, List items) {
+    public User(String username, String email, String password, List items) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.items = items;
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder("{\n")
-                .append("\t\"ID\": ").append(user_id).append(", \n")
-                .append("\t\"Username\": \"").append(username).append("\", \n")
-                .append("\t\"E-mail\": \"").append(email).append("\" \n")
-                .append("}")
-                .toString();
     }
 
 }

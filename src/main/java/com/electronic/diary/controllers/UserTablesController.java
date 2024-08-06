@@ -1,7 +1,7 @@
 package com.electronic.diary.controllers;
 
-import com.electronic.diary.DTO.ItemsDTO;
-import com.electronic.diary.DTO.UserDTO;
+import com.electronic.diary.DTO.Item;
+import com.electronic.diary.DTO.User;
 import com.electronic.diary.repository.ItemsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +18,25 @@ public class UserTablesController {
     private ItemsRepository itemsRepository;
 
     @GetMapping
-    public List<ItemsDTO> findAllByUserId(@PathVariable Long id) {
+    public List<Item> findAllByUserId(@PathVariable Long id) {
         log.info("Get all user tables");
         return itemsRepository.findItemsByUserId(id);
     }
 
     @PostMapping
-    public void addItem(@RequestBody List<ItemsDTO> items, @PathVariable Long id) {
+    public void addItem(@RequestBody List<Item> items, @PathVariable Long id) {
 
         if (!items.isEmpty())
-            for (ItemsDTO item: items) {
-                UserDTO u = new UserDTO();
-                u.setUser_id(id);
+            for (Item item: items) {
+                User u = new User();
+                u.setUserId(id);
                 item.setUser(u);
                 itemsRepository.save(item);
             }
     }
 
     @PutMapping("/item")
-    public void updateItem(@PathVariable Long id, @RequestBody ItemsDTO item) {
+    public void updateItem(@PathVariable Long id, @RequestBody Item item) {
         itemsRepository.update(id, item);
     }
 

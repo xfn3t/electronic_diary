@@ -1,8 +1,7 @@
 package com.electronic.diary.controllers;
 
-import com.electronic.diary.DTO.UserDTO;
+import com.electronic.diary.DTO.User;
 import com.electronic.diary.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,30 +20,29 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping
-    @Transactional
-    public List<UserDTO> getAllUsers() {
+    public List<User> getAllUsers() {
         log.info("Get all users");
         return userRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<UserDTO> getUserById(@PathVariable Long id) {
+    public Optional<User> getUserById(@PathVariable Long id) {
         log.info("Get user by id: " + id);
         return userRepository.findById(id);
     }
 
     @GetMapping("/existUser")
-    public Boolean findByEntity(@RequestBody UserDTO user) {
-        return userRepository.existsByUsername(user.getUsername()) && userRepository.existsById(user.getUser_id());
+    public Boolean findByEntity(@RequestBody User user) {
+        return userRepository.existsByUsername(user.getUsername()) && userRepository.existsById(user.getUserId());
     }
 
     @GetMapping("/username")
-    public Optional<UserDTO> findByUsername() {
-        return Optional.ofNullable(userRepository.findByUsername("xfn3t"));
+    public Optional<User> findByUsername() {
+        return userRepository.findByUsername("xfn3t");
     }
 
     @PostMapping
-    public ResponseEntity<String> addUser(@RequestBody UserDTO user) {
+    public ResponseEntity<String> addUser(@RequestBody User user) {
         try {
             if (user.getUsername().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
                 log.error("Empty user object");
@@ -66,12 +64,12 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UserDTO user) {
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User user) {
         System.out.println("ID: " + id);
-        UserDTO u =  user;
+        User u =  user;
         if(userRepository.existsById(id) && id != null) {
             userRepository.updateById(id, user);
-            Optional<UserDTO> uu = userRepository.findById(id);
+            Optional<User> uu = userRepository.findById(id);
             log.info("Entity: " + u + " updated to: " + uu);
             return ResponseEntity.status(HttpStatus.OK).body("Entity: " + u + " updated to: " + uu);
         }
@@ -89,11 +87,11 @@ public class UserController {
     }
 
     @DeleteMapping
-    public HttpStatus deleteUser(@RequestBody UserDTO user) {
+    public HttpStatus deleteUser(@RequestBody User user) {
         if (user == null) return HttpStatus.BAD_REQUEST;
-        if (!userRepository.existsById(user.getUser_id())) return HttpStatus.BAD_REQUEST;
+        if (!userRepository.existsById(user.getUserId())) return HttpStatus.BAD_REQUEST;
 
-        user = userRepository.findByUsername(user.getUsername());
+        user = userRepository.findByUsername(user.getUsername()).get();
         userRepository.delete(user);
         log.info("\n DELETED: " + user);
         return HttpStatus.OK;

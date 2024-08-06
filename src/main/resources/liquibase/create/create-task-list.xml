@@ -1,0 +1,30 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="createTaskList" author="xfnet">
+        <createTable tableName="task_lists">
+            <column name="list_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="user_id, title" tableName="task_lists" constraintName="task_user_unique"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="task_lists" constraintName="task_lists_user_id_fkey" referencedTableName="users" referencedColumnNames="user_id" onUpdate="CASCADE" onDelete="CASCADE"/>
+        <addCheckConstraint tableName="task_lists" constraintName="check_created_at" checkCondition="created_at &lt;= CURRENT_TIMESTAMP"/>
+        <addCheckConstraint tableName="task_lists" constraintName="check_updated_at" checkCondition="updated_at &lt;= CURRENT_TIMESTAMP"/>
+    </changeSet>
+</databaseChangeLog>
